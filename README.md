@@ -1,7 +1,7 @@
 # Thesis
 
-#my_methods.py, 27_classes_file.py, make_final_dataset.py\
-#Τα παραπάνω είναι μέθοδοι που έφτιαξα για την προεπεξεργασία των δεδομένων
+* my_methods.py, 27_classes_file.py, make_final_dataset.py
+* Τα παραπάνω είναι μέθοδοι που έφτιαξα για την προεπεξεργασία των δεδομένων
 # my_methods.py: includes the following methods: 
   * <b>load_data(path)</b> --> loads data from the .mat files(mat_data) and the data from the .hea files(hea_data) in list forms (e.g. mat_data[0] means first patient)
   * <b>get_label(header)</b> --> returns a list of the labels of a single patient (example of input: header_data[0])
