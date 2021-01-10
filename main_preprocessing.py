@@ -16,28 +16,5 @@ recordings = preprocessing(data)
 
 # Save processed data in hdf5 format
 
-# for header in header_data:
-#     print(header[0].split(' ')[2]) prints frequency of every recording
-
-
-"""
-classes = get_classes(testpath)
-print("Unique classes:", classes)
-
-print("data[0] --> 1st recording")
-
-info = header_data[0][0]
-leadI = header_data[0][1]
-leadII = header_data[0][2]
-print(info)
-
-print("Lead I:")
-print_header_per_lead(leadI)
-print("Lead I data:")
-print(data[0][0], '\n')
-
-print("Lead II:")
-print_header_per_lead(leadII)
-print("Lead II data:")
-print(data[0][1], '\n')
-"""
+# normalization???
+# bandpass filter???
