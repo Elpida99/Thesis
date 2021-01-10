@@ -38,12 +38,6 @@ def get_all_labels(header_data):
     return labels
 
 
-# def get_filename(header_data):
-#     filename = header_data[0].split(' ')[0]
-#
-#     return filename
-
-
 def find_27_classes(header_data, labels, dataset="dataset1"):
     header_names = []
     for header in header_data:
@@ -77,12 +71,13 @@ def print_header_per_lead(lead):
     print(f"??: {lead.split(' ')[7]}")
     print(f"name of lead: {lead.split(' ')[8]}")
 
-
+          
 def preprocessing(recordings):
     processed_recordings = []
     for i in range(0, len(recordings)):
         subj = np.zeros([12, 7500])
         for j in range(recordings[i].shape[0]):
+            lead_samples = np.zeros(7500)
             if recordings[i][j].shape[0] < 7500:
                 zeros = 7500 - recordings[i][j].shape[0]
                 lead_samples = np.pad(recordings[i][j], (0, zeros), 'constant', constant_values=0)
@@ -93,7 +88,6 @@ def preprocessing(recordings):
             subj[j] = lead_samples
         processed_recordings.append(subj)
     return processed_recordings
-
 
 def cut_sample(sample):  # sample is recordings[i][j]
     tmp = []
