@@ -19,6 +19,6 @@
 * <b>final_dataset(filename)</b> --> reads the text files (e.g 'dataset.txt') and returns an array with the unique filenames(some patients have more than one diagnosis from the 27).
 * <b>cp_data_to_final_directory(path, new_p, fnl_dataset)</b> --> takes as input the final_dataset returned from the above method and copys all files that contain labels of the 27 scored ones in the directory "Data_500_Hz"
 # Final result:
-* Directory 'Data_500_Hz' contains recordings from 4 datasets.
+* Directory 'Data_500_Hz' contains <b>18271</b> recordings from 4 datasets.
 * Each recording belongs to one or more of the 27 scored classes. 
 * After preprocessing all recordings have length equal to 7500 points.
