@@ -7,7 +7,7 @@
   * <b>get_label(header)</b> --> returns a list of the labels of a single patient (example of input: header_data[0])
   * <b>get_all_labels(header_data)</b> --> returns a list with all the labels of all the patients (e.g. labels[0] --> [426627000 , 164889003])
   * <b>create_file_27_classes(hea_names, dt)</b> --> creates a text file (e.g. 'dataset.txt') with the filenames of the data of a dataset (dt) containing diagnosis from the 27 scored ones
-  * <b>find_27_classes(header_data, labels, dataset="dataset1)</b> --> finds the filenames and calls create_file_27_classes()
+  * <b>find_27_classes(header_data, labels, dataset="dataset1")</b> --> finds the filenames and calls create_file_27_classes()
   * <b>cut_sample(sample)</b> --> returns randoms fixed width windows (7500 points) from larger samples
   * <b>preprocessing(recordings)</b> --> (recordings = mat_data) implements zero padding to smaller samples and calls <b>cut_samples</b> for larger ones
 
