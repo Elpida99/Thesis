@@ -14,7 +14,22 @@ Preprocessing (500 Hz freq, 7500 points for each recording(each lead) and T = 15
 """
 recordings = preprocessing(data)
 
-# Save processed data in hdf5 format
-
 # normalization???
 # bandpass filter???
+
+def bandpass_filter(data, lowcut, highcut, signal_freq, filter_order):
+        """
+        Method responsible for creating and applying Butterworth filter.
+        :param deque data: raw data
+        :param float lowcut: filter lowcut frequency value
+        :param float highcut: filter highcut frequency value
+        :param int signal_freq: signal frequency in samples per second (Hz)
+        :param int filter_order: filter order
+        :return array: filtered data
+        """
+        nyquist_freq = 0.5 * signal_freq
+        low = lowcut / nyquist_freq
+        high = highcut / nyquist_freq
+        b, a = butter(filter_order, [low, high], btype="band")
+        y = lfilter(b, a, data)
+        return y
