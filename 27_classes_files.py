@@ -17,7 +17,7 @@ def save_27_classes_files(path, scored_labels, datast):
 
 
 # Load 27 classes (SNOMED CT Codes)
-df = pd.read_csv('dx_mapping_27_scored.csv')  # 6 pairs of classes always coexist??
+df = pd.read_csv('dx_mapping_27_scored.csv')  # 6 pairs of classes have the same score
 scored_labels = np.asarray(df['SNOMED CT Code'])
 
 paths = [path1, path2, path3, path4]
