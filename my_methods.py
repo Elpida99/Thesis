@@ -72,32 +72,48 @@ def print_header_per_lead(lead):
     print(f"name of lead: {lead.split(' ')[8]}")
 
           
-def preprocessing(recordings):
-    processed_recordings = []
-    for i in range(0, len(recordings)):
-        subj = np.zeros([12, 7500])
-        for j in range(recordings[i].shape[0]):
-            lead_samples = np.zeros(7500)
-            if recordings[i][j].shape[0] < 7500:
-                zeros = 7500 - recordings[i][j].shape[0]
-                lead_samples = np.pad(recordings[i][j], (0, zeros), 'constant', constant_values=0)
-            elif recordings[i].shape[0] > 7500:
-                lead_samples = cut_sample(recordings[i][j])
-            elif recordings[i].shape[0] == 7500:
-                lead_samples = recordings[i][j]
-            subj[j] = lead_samples
-        processed_recordings.append(subj)
-    return processed_recordings
+def fix_length(recordings):
+	processed_recordings = []
 
-def cut_sample(sample):  # sample is recordings[i][j]
-    tmp = []
-    max_range = sample.shape[0] - 7500
-    starting_value = random.randint(0, max_range)
-    for i in range(starting_value, 7500):
-        tmp.append(sample[i])
-    sub_sample = np.asarray(tmp)
+	for i in range(0, len(recordings)):
+		subj = np.zeros([12, 7500])
+		for j in range(recordings[i].shape[0]):
+			lead_samples = np.zeros(7500)
 
-    return sub_sample
+			if recordings[i][j].shape[0] < 7500:
+				zeros = 7500 - recordings[i][j].shape[0]
+				lead_samples = np.pad(recordings[i][j], (0, zeros), 'constant', constant_values=0)
+
+			elif recordings[i][j].shape[0] > 7500:
+				lead_samples = cut_sample(recordings[i][j])
+
+			elif recordings[i].shape[1] == 7500:
+				lead_samples = recordings[i][j]
+			subj[j] = lead_samples
+		processed_recordings.append(subj)
+
+	return processed_recordings
+
+
+def cut_sample(sample):  # sample is recordings[i][j] (data of a lead)
+	tmp = []
+	max_range = sample.shape[0] - 7500
+	starting_value = random.randint(0, max_range)
+	for i in range(starting_value, starting_value+7500):
+		tmp.append(sample[i])
+	sub_sample = np.asarray(tmp)
+	return sub_sample
+          
+def normalize(processed_recordings):
+	normalized_data = []
+	for patient in processed_recordings:
+		scaler = MinMaxScaler(feature_range=(-1, 1))
+		scaler.fit(patient)
+		norm_subject = scaler.transform(patient)
+
+		normalized_data.append(norm_subject)
+
+	return normalized_data
 
 
 def print_all_shapes(data):
