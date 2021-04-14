@@ -122,8 +122,7 @@ def cut_sample(sample):  # sample is recordings[i][j] (data of a lead)
 def normalize_data(processed_recordings):
 	normalized_data = []
 	for patient in processed_recordings:
-		#patient = patient.reshape(1, -1)
-		#norm_subject = np.zeros(patient.shape)
+		
 		scaler = MinMaxScaler(feature_range=(-1, 1))
 		scaler.fit(patient)
 		norm_subject = scaler.transform(patient)
