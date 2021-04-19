@@ -17,7 +17,7 @@ def preprocessing(path):
 
   normalized_data = normalize_data(data)
 
-  unfiltered_recordings = fix_length(normalized_data)
+  unfiltered_recordings = fix_length(normalized_data, 7500)
 
   filtered_recordings = bandpass_with_lfilter(unfiltered_recordings)
 
