@@ -205,12 +205,12 @@ def plots(ecg, lead):
 	plt.show()
 	      
 	     
-def resample_data(x):
+def resample_data(x, fs, new_fs):
 	resampled_x = []
 
 	for sample in x:
-		secs = sample.shape[1] / 500
-		samples = math.ceil(secs * 400)
+		secs = sample.shape[1] / fs
+		samples = math.ceil(secs * new_fs)
 		resampled = signal.resample(sample, samples, axis=1)
 
 		resampled_x.append(resampled)
