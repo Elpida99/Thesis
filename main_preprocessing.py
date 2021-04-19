@@ -1,17 +1,7 @@
 from my_methods import load_data, get_all_labels, normalize_data, fix_length, plot_signals, bandpass_with_lfilter
 from data_loader import get_classes
 import numpy as np
-
-path = r'C:\Users\elpid\PycharmProjects\Thesis\Data_500_Hz_2\Dataset_1'
-
-data, header_data = load_data(path)
-
-# Get labels - (each list represents the labels of a patient)
-
-labels = get_all_labels(header_data)
-# print(labels)
-classes = get_classes(path)
-# print("Unique classes:", classes)
+import h5py
 
 # ----------------------------------------------------------------------------------------
 # Preprocessing (500 Hz freq, 7500 points for each recording(each lead) and T = 15 sec)
@@ -19,10 +9,26 @@ classes = get_classes(path)
 # Fixed length 7500 points--> cutting randomly 7500 parts from larger samples
 # ----------------------------------------------------------------------------------------
 
-normalized_data = normalize_data(data)
+path1 = r'C:\Users\elpid\PycharmProjects\Thesis\Data_500_Hz_2\Dataset_1'
+path2 = r'C:\Users\elpid\PycharmProjects\Thesis\Data_500_Hz_2\Dataset_2'
 
-unfiltered_recordings = fix_length(normalized_data)
+def preprocessing(path):
+  data, header_data = load_data(path)
 
-filtered_recordings = bandpass_with_lfilter(unfiltered_recordings)
+  normalized_data = normalize_data(data)
 
-np.save('filtered_1.npy', filtered_recordings)
+  unfiltered_recordings = fix_length(normalized_data)
+
+  filtered_recordings = bandpass_with_lfilter(unfiltered_recordings)
+
+  return filtered_recordings
+
+dataset1 = preprocessing(path1)
+dataset2 = preprocessing(path2)
+
+combined_datasets = np.append(dataset1, dataset2, axis=0)
+print(combined_datasets.shape)
+
+with h5py.File(r'C:\Users\elpid\PycharmProjects\Thesis\data\ecg_tracings.hdf5', 'w') as hdf:
+     hdf['tracings'] = combined_datasets
+hdf.close()
