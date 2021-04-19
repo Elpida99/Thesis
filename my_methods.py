@@ -213,7 +213,6 @@ def resample_data(x):
 		samples = math.ceil(secs * 400)
 		resampled = signal.resample(sample, samples, axis=1)
 
-		print(resampled.shape)
 		resampled_x.append(resampled)
 
 	return resampled_x
