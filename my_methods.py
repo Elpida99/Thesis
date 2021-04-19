@@ -86,22 +86,22 @@ def print_header_per_lead(lead):
 	print(f"name of lead: {lead.split(' ')[8]}")
 
 
-def fix_length(recordings):
+def fix_length(recordings, length):
 	processed_recordings = []
 
 	for i in range(0, len(recordings)):
-		subj = np.zeros([12, 7500])
+		subj = np.zeros([12, length])
 		for j in range(recordings[i].shape[0]):
-			lead_samples = np.zeros(7500)
+			lead_samples = np.zeros(length)
 
-			if recordings[i][j].shape[0] < 7500:
-				zeros = 7500 - recordings[i][j].shape[0]
+			if recordings[i][j].shape[0] < length:
+				zeros = length - recordings[i][j].shape[0]
 				lead_samples = np.pad(recordings[i][j], (0, zeros), 'constant', constant_values=0)
 
-			elif recordings[i][j].shape[0] > 7500:
-				lead_samples = cut_sample(recordings[i][j])
+			elif recordings[i][j].shape[0] > length:
+				lead_samples = cut_sample(recordings[i][j], length)
 
-			elif recordings[i].shape[1] == 7500:
+			elif recordings[i].shape[1] == length:
 				lead_samples = recordings[i][j]
 			subj[j] = lead_samples
 		processed_recordings.append(subj)
@@ -109,11 +109,11 @@ def fix_length(recordings):
 	return processed_recordings
 
 
-def cut_sample(sample):  # sample is recordings[i][j] (data of a lead)
+def cut_sample(sample, length):  # sample is recordings[i][j] (data of a lead)
 	tmp = []
-	max_range = sample.shape[0] - 7500
+	max_range = sample.shape[0] - length
 	starting_value = random.randint(0, max_range)
-	for i in range(starting_value, starting_value+7500):
+	for i in range(starting_value, starting_value+length):
 		tmp.append(sample[i])
 	sub_sample = np.asarray(tmp)
 	return sub_sample
@@ -203,4 +203,25 @@ def plots(ecg, lead):
 	plt.xlim(0, 3)
 	plt.ylim(-1, 1.5)
 	plt.show()
+	      
+	     
+def resample_data(x):
+	resampled_x = []
 
+	for sample in x:
+		secs = sample.shape[1] / 500
+		samples = math.ceil(secs * 400)
+		resampled = signal.resample(sample, samples, axis=1)
+
+		print(resampled.shape)
+		resampled_x.append(resampled)
+
+	return resampled_x
+
+
+def transpose_data(data):
+	new_data = []
+	for sample in data:
+		new_sample = np.transpose(sample)
+		new_data.append(new_sample)
+	return np.asarray(new_data)
