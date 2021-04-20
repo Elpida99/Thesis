@@ -56,6 +56,14 @@ def get_sex(sex):
     return sex.lower()
 
 
+def get_sex_age(header_data):
+    # Elpida Makri
+    age = header_data[13].split(':')[-1].strip()
+    sex = get_sex(sex=header_data[14].split(':')[-1].strip())
+
+    return age, sex
+
+
 def parse_header(header_data, inference=False):
     filename = header_data[0].split(' ')[0]
     num_leads = int(header_data[0].split(' ')[1])
