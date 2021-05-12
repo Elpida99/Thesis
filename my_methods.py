@@ -4,6 +4,7 @@ import random
 from scipy import signal
 from scipy.fft import fftshift
 import matplotlib.pyplot as plt
+import math
 from sklearn.preprocessing import MinMaxScaler
 
 from data_loader import load_challenge_data
@@ -122,7 +123,8 @@ def cut_sample(sample, length):  # sample is recordings[i][j] (data of a lead)
 def normalize_data(processed_recordings):
 	normalized_data = []
 	for patient in processed_recordings:
-		
+		#patient = patient.reshape(1, -1)
+		#norm_subject = np.zeros(patient.shape)
 		scaler = MinMaxScaler(feature_range=(-1, 1))
 		scaler.fit(patient)
 		norm_subject = scaler.transform(patient)
@@ -142,14 +144,14 @@ def print_spectogram(data, title, number):
 	plt.show()
 
 
-def bandpass_with_lfilter(data):
+def bandpass_filter(data, fs):
 	filtered_data = []
-	fs = 500
+
 	for subject in data:
 		filtered_subject = np.zeros(subject.shape)
 		for i in range(0, 11):
 			lead = subject[i]
-			b = signal.firwin(100, [3, 45], pass_zero='bandpass', fs=fs)
+			b = signal.firwin(500, [3, 45], pass_zero='bandpass', fs=fs)
 			w, h = signal.freqz(b, worN=7500)  # worN=7500 because test_signal.shape = 7500
 			x = lead
 
@@ -203,8 +205,10 @@ def plots(ecg, lead):
 	plt.xlim(0, 3)
 	plt.ylim(-1, 1.5)
 	plt.show()
-	      
-	     
+
+	return fs
+
+
 def resample_data(x, fs, new_fs):
 	resampled_x = []
 
@@ -212,15 +216,32 @@ def resample_data(x, fs, new_fs):
 		secs = sample.shape[1] / fs
 		samples = math.ceil(secs * new_fs)
 		resampled = signal.resample(sample, samples, axis=1)
-
+		print(resampled.shape)
 		resampled_x.append(resampled)
 
 	return resampled_x
 
 
-def transpose_data(data):
+def make_float_32(data):
+
 	new_data = []
 	for sample in data:
-		new_sample = np.transpose(sample)
+		new_sample = sample.astype('float32')
 		new_data.append(new_sample)
-	return np.asarray(new_data)
+
+	return new_data
+
+
+def mV(data):
+
+	new_data = []
+	for sample in data:
+		new_sample = []
+		for signal in sample:
+			new_signal = signal/10
+			new_sample.append(new_signal)
+		new_data.append(np.asarray(new_sample))
+
+	print(np.asarray(new_data).shape)
+
+	return new_data
