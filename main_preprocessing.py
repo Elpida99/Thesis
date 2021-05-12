@@ -1,7 +1,7 @@
 import numpy as np
 import h5py
-from my_methods import (bandpass_filter, fix_length, load_data, 
-                        normalize_data, resample_data, transpose_data)
+from my_methods import (bandpass_filter, fix_length, load_data, make_float_32,
+                        normalize_data, resample_data, transpose_data, mV)
 
 # ----------------------------------------------------------------------------------------
 # Preprocessing (500 Hz freq, 7500 points for each recording(each lead) and T = 15 sec)
@@ -29,7 +29,7 @@ def main_preprocessing(path, length):
 
   unfiltered_recordings = fix_length(normalized_data, length)
 
-  filtered_recordings = bandpass_filter(unfiltered_recordings)
+  filtered_recordings = bandpass_filter(unfiltered_recordings, 500)
 
   return filtered_recordings
 
@@ -49,24 +49,28 @@ def main_data(path1, path2):
 def pretrained_preprocessing(path, length):
   data, header_data = load_data(path)
 
-  data = resample_data(data, 500, 400)
+  resampled_data = resample_data(data, 500, 400)
 
-#  normalized_data = normalize_data(data)
+  normalized_data = normalize_data(resampled_data)
 
-  unfiltered_recordings = fix_length(data, length)
+  unfiltered_recordings = fix_length(normalized_data, length)
 
-#  filtered_recordings = bandpass_filter(unfiltered_recordings)
+  # filtered_recordings = bandpass_filter(unfiltered_recordings, 400)
 
-  final_data = transpose_data(unfiltered_recordings)
+  transposed_data = transpose_data(unfiltered_recordings)
 
-  return final_data
+  final_data = make_float_32(transposed_data)
+
+  final_dataset = mV(final_data)
+
+  return final_dataset
 
 
 def pretrained_data(path1, path2):
   """
   :param path1: path to dataset 1
   :param path2: path to dataset 2
-  :saves the data in order to be feeded in the pretrained model
+  :saves the data in order to be fed in the pretrained model
   """
   dataset1 = pretrained_preprocessing(path1, 4096)
   dataset2 = pretrained_preprocessing(path2, 4096)
@@ -74,10 +78,10 @@ def pretrained_data(path1, path2):
   combined_datasets = np.append(dataset1, dataset2, axis=0)
   print(combined_datasets.shape)
 
-  with h5py.File(r'C:\Users\elpid\PycharmProjects\Thesis\data_400\400_ecg_tracings.hdf5', 'w') as hdf:
+  with h5py.File(r'C:\Users\elpid\PycharmProjects\Thesis_pretrained\02data_400\test_tracings.hdf5', 'w') as hdf:
     hdf['tracings'] = combined_datasets
   hdf.close()
 
 # main_data(path1, path2)
-# pretrained_data(path1, path2)
+pretrained_data(path1, path2)
 
